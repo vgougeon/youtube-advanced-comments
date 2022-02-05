@@ -11,11 +11,12 @@ async function setupContainer() {
     if (comments) {
         comments.replaceWith(await tm.getTemplate('main'))
         state.mainElement = document.getElementById('yac-comments')
-        const ytdapp = document.querySelector('ytd-app')
-        console.log(ytdapp)
-        if(ytdapp.isAppDarkTheme()) {
-            state.mainElement.classList = state.mainElement.classList + " dark"
-        }
+        // const ytdapp = document.querySelector('ytd-app')
+        // console.log(ytdapp)
+        // if(ytdapp.isAppDarkTheme) {
+        //     state.mainElement.classList = state.mainElement.classList + " dark"
+        // }
+        cf.bindInputs()
         return true
     }
     return false
@@ -26,5 +27,5 @@ async function loadComments() {
 }
 
 async function renderComments() {
-    cr.renderComments(cl.comments)
+    cf.applyFilters()
 }
