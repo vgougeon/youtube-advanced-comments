@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html class="dark">
+
+<head>
+    <link rel="stylesheet" href="styles/tailwind.css">
+    <link rel="stylesheet" href="styles/pretty-checkbox.min.css">
+</head>
+
+<body class="dark:bg-neutral-900 bg-white dark:text-white border border-neutral-700">
+    <div class="w-96 h-10 flex dark:bg-neutral-800 
+    bg-gradient-to-br from-neutral-50 to-neutral-200 dark:from-neutral-800 dark:to-neutral-600
+    items-center px-5 space-x-2">
+        <span class="font-bold text-[10px]">YAC</span>
+        <span>Youtube Advanced Comments</span>
+    </div>
+    <div class="flex flex-col">
+        <div class="h-14 w-full flex justify-between px-5 items-center">
+            <div class="flex flex-col">
+                <span class="font-semibold">Enable</span>
+                <span class="text-[12px] opacity-75">Enable Youtube Advanced Comments</span>
+            </div>
+            <div class="pretty p-default">
+                <input type="checkbox" />
+                <div class="state p-success-o">
+                    <label></label>
+                </div>
+            </div>
+        </div>
+        <div class="h-14 w-full flex justify-between px-5 items-center">
+            <div class="flex flex-col">
+                <span class="font-semibold">Filters</span>
+                <span class="text-[12px] opacity-75">Enable filters above the youtube comment list</span>
+            </div>
+            <div class="pretty p-default">
+                <input type="checkbox" />
+                <div class="state p-success-o">
+                    <label></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+
+</html>

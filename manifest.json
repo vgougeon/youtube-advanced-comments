@@ -1,0 +1,28 @@
+{
+    "name": "Youtube Comment Advanced",
+    "description": "More features for youtube comments, including filters !",
+    "version": "1.0",
+    "manifest_version": 3,
+    "web_accessible_resources": [
+        {
+            "resources": ["content_script/templates/comment.html", "content_script/templates/main.html"],
+            "matches": [ "*://*.youtube.com/*"]
+        }
+    ],
+    "content_scripts": [{
+            "matches": [ "*://*.youtube.com/*"],
+            "js": [ 
+                "content_script/js/templateManager.js", 
+                "content_script/js/commentLoader.js", 
+                "content_script/js/commentRenderer.js", 
+                "content_script/js/functions.js", 
+                "content_script/js/index.js", 
+                "content_script/js/content.js" 
+            ],
+            "css": [ "styles/tailwind.css" ]
+    }],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": ["storage", "activeTab", "scripting"]
+}
