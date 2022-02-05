@@ -29,3 +29,7 @@ async function loadComments() {
 async function renderComments() {
     cf.applyFilters()
 }
+
+async function showReplies(commentId) {
+    cr.showReplies(commentId)
+}

@@ -8,15 +8,32 @@ class TemplateManager {
             this.templates[name] = html
         }
         const template = document.createElement('template');
-        template.innerHTML = this.getHtmlWithData(name, data || {})
+        let html = this.templates[name]
+        html = this.getHtmlWithCondition(html, data || {})
+        html = this.getHtmlWithData(html, data || {})
+        template.innerHTML = html
         return template.content.childNodes[0]
     }
 
-    getHtmlWithData(name, data = {}) {
-        let html = this.templates[name]
+    getHtmlWithData(html, data = {}) {
         for(let [key, value] of Object.entries(data)) {
-            html = String(html).replace("{{ " + key + " }}", value)
+            // html = String(html).replace("{{ " + key + " }}", value)
+            html = String(html).replace(new RegExp('{{\\s' + key + '\\s}}', 'g'), value)
         }
+        return html
+    }
+
+    getHtmlWithCondition(html, data = {}) {
+        const matches = String(html).matchAll(/{{#(?<open>[a-zA-Z0-9]*)}}(?<content>.*){{\/#(?<close>\1)}}/g)
+        for(let match of Array.from(matches)) {
+            if(data[match.groups['open']]) {
+                html = html.replace(match[0], match.groups['content'])
+            }
+            else {
+                html = html.replace(match[0], '')
+            }
+        }
+        console.log(Array.from(matches))
         return html
     }
 }

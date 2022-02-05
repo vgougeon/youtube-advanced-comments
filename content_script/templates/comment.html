@@ -2,9 +2,20 @@
     <img src="{{ authorAvatar }}" class="w-16 h-16 object-cover flex-shrink-0 rounded-lg" />
     <div class="flex flex-col flex-grow">
         <span>
-            <a href="https://youtube.com/channel/{{ authorEndpoint }}" class="font-semibold text-2xl hover:text-blue-500 w-fit">{{ author }}</a>
+            <a href="https://youtube.com/channel/{{ authorEndpoint }}" 
+            class="font-semibold text-2xl hover:text-blue-500 w-fit {{#isChannelOwner}}text-green-400{{/#isChannelOwner}}">
+            {{ author }}
+            {{#isChannelOwner}}<span class="text-lg ml-1 font-normal py-1 px-5 bg-white bg-opacity-5 rounded-sm">Creator</span>{{/#isChannelOwner}}
+        </a>
             <span class="opacity-70 text-lg ml-2">{{ relativeDate }}</span>
         </span>
         <span class="text-2xl">{{ content }}</span>
+        <div class="flex space-x-3 items-center justify-between">
+            <div class="flex space-x-3 items-center">
+                {{#replyCount}}<span id="show-replies-{{ commentId }}" class="text-xl opacity-80 text-blue-300 underline hover:text-blue-100 cursor-pointer">Show {{ replyCount }} replies</span>{{/#replyCount}}
+                {{#likes}}<span class="text-lg opacity-80">{{ likes }} likes</span>{{/#likes}}
+            </div>
+        </div>
+        <div id="comment-replies-{{ commentId }}" class="flex flex-col space-y-3 pl-10 border-l-8 border-white"></div>
     </div>
 </div>
