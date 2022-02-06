@@ -34,6 +34,8 @@ class CommentRenderer {
             container.appendChild(await tm.getTemplate('comment', comment))
         }
     }
+
+
 }
 
-const cr = new CommentRenderer()
+let cr = new CommentRenderer()

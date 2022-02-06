@@ -1,13 +1,9 @@
 const state = {
-    comments: cl.comments,
     loadAll: false,
-    totalComments: cl.total,
-    videoId: undefined,
     mainElement: undefined
 }
 
 async function setupContainer() {
-    
     const comments = document.getElementById('comments')
     if (comments) {
         comments.replaceWith(await tm.getTemplate('main'))

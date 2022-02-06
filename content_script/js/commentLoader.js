@@ -10,6 +10,14 @@ class CommentLoader {
         const urlParams = new URLSearchParams(window.location.search);
         this.videoId = urlParams.get('v');
     }
+    
+    toggleSpinner(value) {
+        const spinner = document.getElementById('loading-spinner-comments')
+        if(value && spinner)
+            spinner.style.display = 'flex'
+        else if(!value && spinner)
+            spinner.style.display = 'none'
+    }
 
     async continuationRequest(token) {
         const req = await fetch('https://www.youtube.com/youtubei/v1/next?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8', {
@@ -33,6 +41,7 @@ class CommentLoader {
     }
 
     async scrapComments(pages = 500) {
+        this.toggleSpinner(true)
         this.loading = true
         const init = await this.continuationRequest()
         const contents = init.contents.twoColumnWatchNextResults.results.results.contents
@@ -71,6 +80,7 @@ class CommentLoader {
         this.updateLoadingBar();
         await this.scrapReplies()
         this.finished = true
+        this.toggleSpinner(false)
         return true
     }
 
@@ -120,4 +130,4 @@ class CommentLoader {
     }
 }
 
-const cl = new CommentLoader()
+let cl = new CommentLoader()

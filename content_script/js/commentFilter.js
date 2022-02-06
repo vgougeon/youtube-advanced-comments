@@ -51,4 +51,4 @@ class CommentFilter {
     }
 }
 
-const cf = new CommentFilter()
+let cf = new CommentFilter()
