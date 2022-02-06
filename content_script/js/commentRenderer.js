@@ -29,10 +29,16 @@ class CommentRenderer {
     async showReplies(commentId) {
         const comments = cl.comments.filter(c => c.replyTo === commentId)
         const container = document.getElementById(`comment-replies-${commentId}`)
+        const button = document.getElementById(`show-replies-${commentId}`)
+        button.innerText = `${comments.length} replies`
+        const length = container.children.length
         container.innerHTML = ""
-        for(let comment of comments) {
-            container.appendChild(await tm.getTemplate('comment', comment))
-        }
+        if(!length) {
+            button.innerText = `Hide replies`
+            for(let comment of comments) {
+                container.appendChild(await tm.getTemplate('comment', comment))
+            }
+        }  
     }
 
 
