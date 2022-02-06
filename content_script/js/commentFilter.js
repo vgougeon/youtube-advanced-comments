@@ -19,6 +19,9 @@ class CommentFilter {
             this.filters.username = event.target.value
             if(event.key === 'Enter') this.applyFilters()       
         })
+        document.getElementById('load-all-comments').addEventListener('click', () => {
+            state.loadAll = true
+        })
     }
 
     applyFilters() {

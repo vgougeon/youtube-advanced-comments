@@ -1,5 +1,6 @@
 const state = {
     comments: cl.comments,
+    loadAll: false,
     totalComments: cl.total,
     videoId: undefined,
     mainElement: undefined

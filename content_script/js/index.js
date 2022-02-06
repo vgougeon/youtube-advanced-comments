@@ -7,7 +7,7 @@ const settings = {
 function transition() {
     c('UNKNOWN', 'SETTING_UP', () => !!document.getElementById('comments'), setupContainer)
     c('SETTING_UP', 'READY', () => state.mainElement)
-    c('READY', 'LOADING_COMMENTS', () => settings.autoLoad, loadComments)
+    c('READY', 'LOADING_COMMENTS', () => state.loadAll, loadComments)
     c('LOADING_COMMENTS', 'DONE', () => cl.finished, renderComments)
 }
 
