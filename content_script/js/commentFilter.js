@@ -35,8 +35,17 @@ class CommentFilter {
             }
         }
         cr.renderComments(this.filtered)
+        this.updateFilteredBar()
     }
 
+    updateFilteredBar() {
+        const filteredComments = document.getElementById('filtered-comments')
+        const loadedComments = document.getElementById('filtered-loaded-comments')
+        if(filteredComments) filteredComments.innerHTML = this.filtered.length
+        if(loadedComments) loadedComments.innerHTML = cl.comments.length
+        const loadingBar = document.getElementById('filtered-loading-bar')
+        if(loadingBar) loadingBar.style.width = '' + ((this.filtered.length / cl.comments.length) * 100) +'%'
+    }
 }
 
 const cf = new CommentFilter()

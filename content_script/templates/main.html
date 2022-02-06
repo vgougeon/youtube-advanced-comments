@@ -14,9 +14,23 @@
                 <div id="comments-loading-bar"
                 class="absolute bg-gradient-to-br from-blue-600 to-pink-500 w-full h-full z-10 rounded-lg transition-all"></div>
                 <div class="w-full justify-center flex items-center space-x-3 text-xl z-20 relative">
+                    <span class="text-base">loaded</span>
                     <span id="loaded-comments" class="font-semibold">0</span>
                     <span>/</span>
                     <span id="total-comments" class="font-semibold">?</span>
+                    <span class="text-base">total</span>
+
+                </div>
+            </div>
+            <div class="w-full flex bg-neutral-800 shadow-xl h-12 relative rounded-lg">
+                <div id="filtered-loading-bar"
+                class="absolute bg-gradient-to-br from-green-500 to-emerald-600 w-full h-full z-10 rounded-lg transition-all"></div>
+                <div class="w-full justify-center flex items-center space-x-3 text-xl z-20 relative">
+                    <span class="text-base">filtered</span>
+                    <span id="filtered-comments" class="font-semibold">0</span>
+                    <span>/</span>
+                    <span id="filtered-loaded-comments" class="font-semibold">?</span>
+                    <span class="text-base">total</span>
                 </div>
             </div>
             <div class="w-full p-8 flex flex-col bg-neutral-800 shadow-xl space-y-6 h-fit">
