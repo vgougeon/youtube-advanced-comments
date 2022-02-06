@@ -5,3 +5,19 @@
 .chip-border {
     border: 1px solid rgba(255, 255, 255, 0.1)
 }
+
+.comment-replies {
+    position: relative;
+}
+
+.comment-replies::before {
+    position: absolute;
+    content: '';
+    background-color: white;
+    opacity: 0.1;
+    width: 4px;
+    top: 4px;
+    left: -8px;
+    bottom: 4px;
+    border-radius: 2px;
+}

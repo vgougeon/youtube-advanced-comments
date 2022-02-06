@@ -24,7 +24,7 @@ class TemplateManager {
     }
 
     getHtmlWithCondition(html, data = {}) {
-        const matches = String(html).matchAll(/{{#(?<open>[a-zA-Z0-9]*)}}(?<content>.*){{\/#(?<close>\1)}}/g)
+        const matches = String(html).matchAll(/{{#(?<open>[a-zA-Z0-9]*)}}(?<content>.*?){{\/#(?<close>\1)}}/gs)
         for(let match of Array.from(matches)) {
             if(data[match.groups['open']]) {
                 html = html.replace(match[0], match.groups['content'])
@@ -33,7 +33,6 @@ class TemplateManager {
                 html = html.replace(match[0], '')
             }
         }
-        console.log(Array.from(matches))
         return html
     }
 }

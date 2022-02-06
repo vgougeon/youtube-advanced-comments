@@ -47,7 +47,6 @@ class CommentLoader {
                 this.totalText = res.onResponseReceivedEndpoints[0]?.reloadContinuationItemsCommand.continuationItems[0].commentsHeaderRenderer.countText.runs[0].text
                 this.total = +this.totalText.replace(/,/g, '');
             }
-            console.log(items)
             for (let item of items) {
                 if (!item.commentThreadRenderer) continue;
                 this.comments.push({
@@ -66,8 +65,10 @@ class CommentLoader {
             if (items.length && items[items.length - 1].continuationItemRenderer) {
                 token = items[items.length - 1].continuationItemRenderer.continuationEndpoint.continuationCommand.token
             }
+            this.updateLoadingBar()
             if (!token) break;
         }
+        this.updateLoadingBar();
         await this.scrapReplies()
         this.finished = true
         return true
@@ -100,11 +101,22 @@ class CommentLoader {
                     if (items.length && items[items.length - 1].continuationItemRenderer) {
                         token = items[items.length - 1].continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token
                     }
+                    this.updateLoadingBar();
                     if (!token) break;
                 }
             }
+            this.updateLoadingBar()
         }
         console.log(this.comments)
+    }
+
+    updateLoadingBar() {
+        const loadedComments = document.getElementById('loaded-comments')
+        const totalComments = document.getElementById('total-comments')
+        if(loadedComments) loadedComments.innerHTML = this.comments.length
+        if(totalComments) totalComments.innerHTML = this.total
+        const loadingBar = document.getElementById('comments-loading-bar')
+        if(loadingBar && this.total !== undefined) loadingBar.style.width = '' + ((this.comments.length / this.total) * 100) +'%'
     }
 }
 
