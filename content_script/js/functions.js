@@ -48,7 +48,6 @@ const HTMLUtils = new function() {
             const rule = rules[i];
             result = result.replace(rule.expression, rule.replacement);
         }
-        console.log(result)
         return result;
         
     }

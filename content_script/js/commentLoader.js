@@ -67,6 +67,7 @@ class CommentLoader {
                 const c = item.commentThreadRenderer.comment.commentRenderer
                 const add = {
                     author: HTMLUtils.escape(c.authorText.simpleText),
+                    verified: c.authorCommentBadge?.authorCommentBadgeRenderer.iconTooltip,
                     authorEndpoint: c.authorEndpoint.browseEndpoint.browseId,
                     authorAvatar: c.authorThumbnail.thumbnails[0].url,
                     isChannelOwner: c.authorIsChannelOwner || false,
@@ -97,8 +98,11 @@ class CommentLoader {
     }
 
     done() {
-        if(this.commentsLoaded && !this.repliesTasks.find(r => r.finished === false)) 
+        if(this.commentsLoaded && !this.repliesTasks.find(r => r.finished === false)) {
+            console.log(this.comments)
             this.finished = true
+        }
+            
     }
 
     async scrapReplies(comment) {
@@ -113,6 +117,7 @@ class CommentLoader {
                 if (!item.commentRenderer) continue;
                 this.comments.push({
                     author: HTMLUtils.escape(item.commentRenderer.authorText.simpleText),
+                    verified: item.commentRenderer.authorCommentBadge?.authorCommentBadgeRenderer.iconTooltip,
                     authorEndpoint: item.commentRenderer.authorEndpoint.browseEndpoint.browseId,
                     authorAvatar: item.commentRenderer.authorThumbnail.thumbnails[0].url,
                     isChannelOwner: item.commentRenderer.authorIsChannelOwner || false,

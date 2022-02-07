@@ -20,7 +20,7 @@
                 "content_script/js/index.js", 
                 "content_script/js/content.js" 
             ],
-            "css": [ "styles/tailwind.css" ]
+            "css": [ "styles/pretty-checkbox.min.css", "styles/tailwind.css" ]
     }],
     "action": {
         "default_popup": "index.html"

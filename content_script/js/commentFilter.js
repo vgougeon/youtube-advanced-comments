@@ -4,6 +4,8 @@ class CommentFilter {
     filters = {
         keyword: '',
         username: '',
+        verified: false,
+        creator: false,
         others: []
     }
 
@@ -19,6 +21,14 @@ class CommentFilter {
             this.filters.username = event.target.value
             if(event.key === 'Enter') this.applyFilters()       
         })
+        document.getElementById('verified-input').addEventListener('change', (event) => {
+            this.filters.verified = event.target.checked
+            this.applyFilters()
+        })
+        document.getElementById('creator-input').addEventListener('change', (event) => {
+            this.filters.creator = event.target.checked
+            this.applyFilters()
+        })
         document.getElementById('load-all-comments').addEventListener('click', () => {
             state.loadAll = true
         })
@@ -31,6 +41,12 @@ class CommentFilter {
         }
         if(this.filters.username) {
             this.filtered = this.filtered.filter(c => c.author.toLocaleLowerCase().includes(this.filters.username.toLocaleLowerCase()))
+        }
+        if(this.filters.verified) {
+            this.filtered = this.filtered.filter(c => c.verified)
+        }
+        if(this.filters.creator) {
+            this.filtered = this.filtered.filter(c => c.isChannelOwner)
         }
         for(let filter of this.filters.others) {
             switch(filter.type) {
