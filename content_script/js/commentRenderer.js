@@ -1,17 +1,29 @@
 class CommentRenderer {
 
     page = 0
+    commentsToDisplay = []
+
+    isEmpty() {
+        const container = document.getElementById('yac-comments')
+        if(container.childNodes.length === 0) {
+            return 
+        }
+    }
     
     async renderComments(comments) {
+        console.log(this.isEmpty())
+        this.commentsToDisplay = comments
         const container = document.getElementById('yac-comments')
         if (!container) return;
+        console.log(container.childNodes)
         this.renderChips()
         container.innerHTML = ""
-        for (let comment of comments) {
-            container.appendChild(await tm.getTemplate('comment', comment))
-            if(comment.replyCount) {
-                document.getElementById('show-replies-' + comment.commentId).addEventListener('click', () => {
-                    cr.showReplies(comment.commentId)
+        console.log(comments.length)
+        for(let i = 0; i < ((comments.length > 20) ? 20 : comments.length); i++) {
+            container.appendChild(await tm.getTemplate('comment', comments[i]))
+            if(comments[i].replyCount) {
+                document.getElementById('show-replies-' + comments[i].commentId).addEventListener('click', () => {
+                    cr.showReplies(comments[i].commentId)
                 })
             }
         }

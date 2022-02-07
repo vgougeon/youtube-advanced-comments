@@ -1,7 +1,7 @@
 <div class="w-full flex space-x-3 p-3">
     <img src="{{ authorAvatar }}" class="w-16 h-16 object-cover flex-shrink-0 rounded-lg" />
     <div class="flex flex-col flex-grow">
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2 flex-wrap">
             <a href="https://youtube.com/channel/{{ authorEndpoint }}" 
             class="font-semibold text-2xl hover:text-blue-500 w-fit {{#isChannelOwner}}text-green-400{{/#isChannelOwner}}">
             {{ author }}
@@ -10,7 +10,7 @@
             {{#isChannelOwner}}<span class="text-lg font-normal py-1 px-4 bg-white bg-opacity-5 rounded-sm">Creator</span>{{/#isChannelOwner}}
             <span class="opacity-70 text-lg">{{ relativeDate }}</span>
         </div>
-        <span class="text-2xl">{{ content }}</span>
+        <span class="text-2xl break-all">{{ content }}</span>
         <div class="flex space-x-3 items-center justify-between">
             <div class="flex space-x-3 items-center">
                 {{#replyCount}}
