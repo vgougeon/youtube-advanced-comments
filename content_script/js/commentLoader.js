@@ -66,13 +66,13 @@ class CommentLoader {
                 if (!item.commentThreadRenderer) continue;
                 const c = item.commentThreadRenderer.comment.commentRenderer
                 const add = {
-                    author: c.authorText.simpleText,
+                    author: HTMLUtils.escape(c.authorText.simpleText),
                     authorEndpoint: c.authorEndpoint.browseEndpoint.browseId,
                     authorAvatar: c.authorThumbnail.thumbnails[0].url,
                     isChannelOwner: c.authorIsChannelOwner || false,
                     commentId: c.commentId,
-                    content: c.contentText.runs[0].text,
-                    relativeDate: c.publishedTimeText.runs[0].text,
+                    content: HTMLUtils.escape(c.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
+                    relativeDate: c.publishedTimeText.runs.map(r => r.text).join(''),
                     likes: +c.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS
                     replyCount: c.replyCount,
                     repliesToken: item.commentThreadRenderer.replies?.commentRepliesRenderer?.contents[0]?.continuationItemRenderer.continuationEndpoint.continuationCommand.token
@@ -112,12 +112,13 @@ class CommentLoader {
             for (let item of items) {
                 if (!item.commentRenderer) continue;
                 this.comments.push({
-                    author: item.commentRenderer.authorText.simpleText,
+                    author: HTMLUtils.escape(item.commentRenderer.authorText.simpleText),
                     authorEndpoint: item.commentRenderer.authorEndpoint.browseEndpoint.browseId,
                     authorAvatar: item.commentRenderer.authorThumbnail.thumbnails[0].url,
                     isChannelOwner: item.commentRenderer.authorIsChannelOwner || false,
                     commentId: item.commentRenderer.commentId,
-                    content: item.commentRenderer.contentText.runs[0].text, // NEEDS .join FOR MULTILINE
+                    content: HTMLUtils.escape(item.commentRenderer.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
+                    // content: item.commentRenderer.contentText.runs.map(r => r.text).join('').replace(/\n/g, '<br />'), // NEEDS .join FOR MULTILINE
                     relativeDate: item.commentRenderer.publishedTimeText.runs[0].text,
                     likes: +item.commentRenderer.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS (>999)
                     replyTo: comment.commentId

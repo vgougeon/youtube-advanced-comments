@@ -33,3 +33,23 @@ async function renderComments() {
 async function showReplies(commentId) {
     cr.showReplies(commentId)
 }
+
+const HTMLUtils = new function() {
+    const rules = [
+        { expression: /&/g, replacement: '&amp;'  },
+        { expression: /</g, replacement: '&lt;'   },
+        { expression: />/g, replacement: '&gt;'   },
+        { expression: /"/g, replacement: '&quot;' },
+        { expression: /'/g, replacement: '&#039;' }
+    ];
+    this.escape = function(html) {
+        let result = html;
+        for (let i = 0; i < rules.length; ++i) {
+            const rule = rules[i];
+            result = result.replace(rule.expression, rule.replacement);
+        }
+        console.log(result)
+        return result;
+        
+    }
+};
