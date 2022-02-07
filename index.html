@@ -1,39 +1,41 @@
 <!DOCTYPE html>
-<html class="dark">
+<html>
 
 <head>
     <link rel="stylesheet" href="styles/tailwind.css">
     <link rel="stylesheet" href="styles/pretty-checkbox.min.css">
 </head>
 
-<body class="dark:bg-neutral-900 bg-white dark:text-white border border-neutral-700">
-    <div class="w-96 h-10 flex dark:bg-neutral-800 
-    bg-gradient-to-br from-neutral-50 to-neutral-200 dark:from-neutral-800 dark:to-neutral-600
+<body class="dark:bg-neutral-900 bg-white dark:text-white border border-transparent dark:border-neutral-700">
+    <div class="w-96 h-10 flex
+    bg-white dark:bg-neutral-800 border-b border-gray-200 dark:border-gray-700
     items-center px-5 space-x-2">
         <span class="font-bold text-[10px]">YAC</span>
         <span>Youtube Advanced Comments</span>
     </div>
     <div class="flex flex-col">
-        <div class="h-14 w-full flex justify-between px-5 items-center">
+
+        <div class="py-3 w-full flex justify-between px-5 items-center space-x-4 dark:hover:bg-white dark:hover:bg-opacity-5 hover:bg-black hover:bg-opacity-5">
             <div class="flex flex-col">
-                <span class="font-semibold">Enable</span>
-                <span class="text-[12px] opacity-75">Enable Youtube Advanced Comments</span>
+                <span class="font-bold text-[14px]">Enable</span>
+                <span class="text-[14px] opacity-90">Enable Youtube Advanced Comments</span>
             </div>
-            <div class="pretty p-default">
-                <input type="checkbox" />
-                <div class="state p-success-o">
+            <div class="pretty p-switch p-fill text-base px-3">
+                <input type="checkbox" id="enabled"/>
+                <div class="state p-success">
                     <label></label>
                 </div>
             </div>
         </div>
-        <div class="h-14 w-full flex justify-between px-5 items-center">
+
+        <div class="py-3 w-full flex justify-between px-5 items-center space-x-4 dark:hover:bg-white dark:hover:bg-opacity-5 hover:bg-black hover:bg-opacity-5">
             <div class="flex flex-col">
-                <span class="font-semibold">Filters</span>
-                <span class="text-[12px] opacity-75">Enable filters above the youtube comment list</span>
+                <span class="font-bold text-[14px]">Initial loading</span>
+                <span class="text-[14px] opacity-90">Do you want me to load all comments by default ?</span>
             </div>
-            <div class="pretty p-default">
-                <input type="checkbox" />
-                <div class="state p-success-o">
+            <div class="pretty p-switch p-fill text-base px-3">
+                <input type="checkbox" id="loadAll"/>
+                <div class="state p-success">
                     <label></label>
                 </div>
             </div>

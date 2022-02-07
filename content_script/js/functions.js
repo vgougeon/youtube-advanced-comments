@@ -18,6 +18,9 @@ async function setupContainer() {
     }
     return false
 }
+async function loadAllComments() {
+    cl.scrapComments()
+}
 
 async function loadComments() {
     cl.scrapComments()

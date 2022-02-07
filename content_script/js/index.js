@@ -1,24 +1,31 @@
 // UNKOWN - READY - LOADING_COMMENTS - DONE
 let CURRENT_STATE = 'UNKNOWN'
 const settings = {
-    autoLoad: true
+    loadAll: undefined,
+    enabled: true
 }
+
+chrome.storage.local.get(['loadAll', 'enabled'], function (result) {
+    settings.loadAll = result['loadAll'] !== undefined ? result['loadAll'] : false
+    settings.enabled = result['enabled'] !== undefined ? result['enabled'] : true
+})
+
 
 function transition() {
     const v = new URLSearchParams(window.location.search).get('v');
-    if(v !== cl.videoId) { reset(); return;}
-
-    c('UNKNOWN', 'SETTING_UP', () => !!document.getElementById('comments'), setupContainer)
+    if (v !== cl.videoId) { reset(); return; }
+    c('UNKNOWN', 'SETTINGS_READY', () => settings.loadAll !== undefined)
+    c('SETTINGS_READY', 'SETTING_UP', () => !!document.getElementById('comments'), setupContainer)
     c('SETTING_UP', 'READY', () => state.mainElement)
-    c('READY', 'LOADING_COMMENTS', () => state.loadAll, loadComments)
+    c('READY', 'LOADING_COMMENTS', () => true, loadComments)
     c('LOADING_COMMENTS', 'DONE', () => cl.finished, renderComments)
 }
 
 function c(from, to, condition, callback) {
-    if(CURRENT_STATE === from && condition()) {
+    if (CURRENT_STATE === from && condition()) {
         CURRENT_STATE = to
         console.debug(`${from} >>> ${to}`)
-        if(callback) callback()
+        if (callback) callback()
     }
 }
 
