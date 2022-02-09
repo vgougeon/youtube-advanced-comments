@@ -15,7 +15,7 @@ function transition() {
     const v = new URLSearchParams(window.location.search).get('v');
     if (v !== cl.videoId) { reset(); return; }
     c('UNKNOWN', 'SETTINGS_READY', () => settings.loadAll !== undefined)
-    c('SETTINGS_READY', 'SETTING_UP', () => !!document.getElementById('comments'), setupContainer)
+    c('SETTINGS_READY', 'SETTING_UP', () => (!!document.getElementById('comments') && settings.enabled), setupContainer)
     c('SETTING_UP', 'READY', () => state.mainElement)
     c('READY', 'LOADING_COMMENTS', () => true, loadComments)
     c('LOADING_COMMENTS', 'DONE', () => cl.finished, renderComments)

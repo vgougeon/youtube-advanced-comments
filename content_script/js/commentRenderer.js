@@ -26,6 +26,11 @@ class CommentRenderer {
                     cr.showReplies(comments[i].commentId)
                 })
             }
+            if(comments[i].replyTo) {
+                document.getElementById('show-replyTo-' + comments[i].commentId).addEventListener('click', () => {
+                    cr.showReplyTo(comments[i].commentId)
+                })
+            }
         }
     }
 
@@ -51,6 +56,24 @@ class CommentRenderer {
                 container.appendChild(await tm.getTemplate('comment', comment))
             }
         }  
+    }
+
+    async showReplyTo(commentId) {
+        const comment = cl.comments.find(c => c.commentId === commentId)
+        const replyTo = comment.replyToComment
+        const container = document.getElementById(`original-comment-${commentId}`)
+        const button = document.getElementById(`show-replyTo-${commentId}`)
+        button.innerText = `Show comment`
+        const length = container.children.length
+        container.innerHTML = ""
+        if(!length) {
+            container.parentNode.classList.add('open')
+            button.innerText = `Hide comment`
+            container.appendChild(await tm.getTemplate('comment', replyTo))
+        }
+        else {
+            container.parentNode.classList.remove('open')
+        }
     }
 
 

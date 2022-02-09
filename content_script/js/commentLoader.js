@@ -126,7 +126,8 @@ class CommentLoader {
                     // content: item.commentRenderer.contentText.runs.map(r => r.text).join('').replace(/\n/g, '<br />'), // NEEDS .join FOR MULTILINE
                     relativeDate: item.commentRenderer.publishedTimeText.runs[0].text,
                     likes: +item.commentRenderer.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS (>999)
-                    replyTo: comment.commentId
+                    replyTo: comment.commentId,
+                    replyToComment: comment
                 })
             }
             token = undefined
