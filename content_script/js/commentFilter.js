@@ -6,6 +6,7 @@ class CommentFilter {
         username: '',
         verified: false,
         creator: false,
+        dateSort: 0,
         others: []
     }
 
@@ -29,6 +30,18 @@ class CommentFilter {
             this.filters.creator = event.target.checked
             this.applyFilters()
         })
+        document.getElementById('date-sort-input').addEventListener('click', (event) => {
+            const cycle = [0, 1, -1]
+            const current = cycle.indexOf(this.filters.dateSort)
+            const value = cycle[(current + 1) % cycle.length]
+            const element = document.getElementById('date-sort-input')
+            element.classList.remove('no-sort', 'sort-up', 'sort-down')
+            if(value === 0) element.classList.add('no-sort')
+            if(value === 1) element.classList.add('sort-up')
+            if(value === -1) element.classList.add('sort-down')
+            this.filters.dateSort = value
+            this.applyFilters()
+        })
         document.getElementById('load-all-comments').addEventListener('click', () => {
             state.loadAll = true
         })
@@ -47,6 +60,14 @@ class CommentFilter {
         }
         if(this.filters.creator) {
             this.filtered = this.filtered.filter(c => c.isChannelOwner)
+        }
+        if(this.filters.dateSort === 1) {
+            console.log('filter up')
+            this.filtered = this.filtered.sort((a, b) => b.date - a.date)
+        }
+        if(this.filters.dateSort === -1) {
+            console.log('filter down')
+            this.filtered = this.filtered.sort((a, b) => a.date - b.date)
         }
         for(let filter of this.filters.others) {
             switch(filter.type) {

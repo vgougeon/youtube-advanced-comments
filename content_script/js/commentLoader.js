@@ -43,8 +43,23 @@ class CommentLoader {
         return res
     }
 
-    async getToken() {
-
+    dateParser(str) {
+        const date = new Date()
+        if (str.includes('year'))
+            date.setFullYear(date.getFullYear() - Number(str.split(' ')[0]))
+        else if (str.includes('month'))
+            date.setMonth(date.getMonth() - Number(str.split(' ')[0]))
+        else if (str.includes('week'))
+            date.setHours(date.getHours() - Number(str.split(' ')[0]) * 7 * 24)
+        else if (str.includes('day'))
+            date.setHours(date.getHours() - Number(str.split(' ')[0]) * 24)
+        else if (str.includes('hour'))
+            date.setHours(date.getHours() - Number(str.split(' ')[0]))
+        else if (str.includes('minute'))
+            date.setMinutes(date.getMinutes() - Number(str.split(' ')[0]))
+        else if (str.includes('second'))
+            date.setSeconds(date.getSeconds() - Number(str.split(' ')[0]))
+        return date
     }
 
     async scrapComments() {
@@ -74,6 +89,7 @@ class CommentLoader {
                     commentId: c.commentId,
                     content: HTMLUtils.escape(c.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
                     relativeDate: c.publishedTimeText.runs.map(r => r.text).join(''),
+                    date: this.dateParser(c.publishedTimeText.runs.map(r => r.text).join('')),
                     likes: +c.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS
                     replyCount: c.replyCount,
                     repliesToken: item.commentThreadRenderer.replies?.commentRepliesRenderer?.contents[0]?.continuationItemRenderer.continuationEndpoint.continuationCommand.token
@@ -123,6 +139,7 @@ class CommentLoader {
                     isChannelOwner: item.commentRenderer.authorIsChannelOwner || false,
                     commentId: item.commentRenderer.commentId,
                     content: HTMLUtils.escape(item.commentRenderer.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
+                    date: this.dateParser(item.commentRenderer.publishedTimeText.runs.map(r => r.text).join('')),
                     // content: item.commentRenderer.contentText.runs.map(r => r.text).join('').replace(/\n/g, '<br />'), // NEEDS .join FOR MULTILINE
                     relativeDate: item.commentRenderer.publishedTimeText.runs[0].text,
                     likes: +item.commentRenderer.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS (>999)

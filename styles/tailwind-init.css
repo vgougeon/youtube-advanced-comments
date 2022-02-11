@@ -67,3 +67,22 @@
 .dark .light-border {
     border: none;
 }
+
+.sort-up-icon, .sort-down-icon, .no-sort-icon {
+    display: none;
+    width: 10px;
+    height: 10px;
+}
+
+.no-sort .no-sort-icon {
+    display: block;
+}
+
+.sort-up .sort-up-icon {
+    display: block;
+}
+
+.sort-down .sort-down-icon {
+    display: block;
+}
+
