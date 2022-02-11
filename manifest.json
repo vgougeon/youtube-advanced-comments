@@ -3,6 +3,11 @@
     "description": "More features for youtube comments, including filters !",
     "version": "1.0",
     "manifest_version": 3,
+    "icons": { 
+        "16": "/assets/iconbw16.png",
+        "48": "/assets/iconbw48.png",
+       "128": "/assets/iconbw128.png" 
+    },
     "web_accessible_resources": [
         {
             "resources": ["content_script/templates/*"],
@@ -23,7 +28,12 @@
             "css": [ "styles/pretty-checkbox.min.css", "styles/tailwind.css" ]
     }],
     "action": {
-        "default_popup": "index.html"
+        "default_popup": "index.html",
+        "default_icon": { 
+            "16": "/assets/iconbw16.png",
+            "48": "/assets/iconbw48.png",
+           "128": "/assets/iconbw128.png" 
+        }
     },
     "permissions": ["storage", "activeTab", "scripting"]
 }
