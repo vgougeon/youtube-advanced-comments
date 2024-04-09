@@ -13,12 +13,12 @@ class CommentLoader {
         const urlParams = new URLSearchParams(window.location.search);
         this.videoId = urlParams.get('v');
     }
-    
+
     toggleSpinner(value) {
         const spinner = document.getElementById('loading-spinner-comments')
-        if(value && spinner)
+        if (value && spinner)
             spinner.style.display = 'flex'
-        else if(!value && spinner)
+        else if (!value && spinner)
             spinner.style.display = 'none'
     }
 
@@ -73,38 +73,58 @@ class CommentLoader {
             token = undefined
             const items = res.onResponseReceivedEndpoints[1]?.reloadContinuationItemsCommand?.continuationItems ||
                 res.onResponseReceivedEndpoints[0]?.appendContinuationItemsAction?.continuationItems || []
-            if(!this.total) {
+            if (!this.total) {
                 this.totalText = res.onResponseReceivedEndpoints[0]?.reloadContinuationItemsCommand.continuationItems[0].commentsHeaderRenderer.countText.runs[0].text
                 this.total = +this.totalText.replace(/,/g, '');
             }
             for (let item of items) {
                 if (!item.commentThreadRenderer) continue;
-                const c = item.commentThreadRenderer.comment.commentRenderer
-                const add = {
-                    author: HTMLUtils.escape(c.authorText.simpleText),
-                    verified: c.authorCommentBadge?.authorCommentBadgeRenderer.iconTooltip,
-                    authorEndpoint: c.authorEndpoint.browseEndpoint.browseId,
-                    authorAvatar: c.authorThumbnail.thumbnails[0].url,
-                    isChannelOwner: c.authorIsChannelOwner || false,
-                    commentId: c.commentId,
-                    content: HTMLUtils.escape(c.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
-                    relativeDate: c.publishedTimeText.runs.map(r => r.text).join(''),
-                    date: this.dateParser(c.publishedTimeText.runs.map(r => r.text).join('')),
-                    likes: +c.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS
-                    replyCount: c.replyCount,
-                    repliesToken: item.commentThreadRenderer.replies?.commentRepliesRenderer?.contents[0]?.continuationItemRenderer.continuationEndpoint.continuationCommand.token
+                if(!res.frameworkUpdates) debugger;
+                if (res.frameworkUpdates) {
+                    const entity = res.frameworkUpdates.entityBatchUpdate.mutations.find(e => e.entityKey === item.commentThreadRenderer.commentViewModel.commentViewModel.commentKey);
+                    const add = {
+                        author: entity.payload.commentEntityPayload.author.displayName,
+                        verified: entity.payload.commentEntityPayload.author.isVerified,
+                        authorEndpoint: entity.payload.commentEntityPayload.author.channelId, //TO FIND
+                        authorAvatar: entity.payload.commentEntityPayload.author.avatarThumbnailUrl,
+                        isChannelOwner: entity.payload.commentEntityPayload.author.isCreator,
+                        commentId: entity.payload.commentEntityPayload.key,
+                        content: entity.payload.commentEntityPayload.properties.content.content,
+                        relativeDate: entity.payload.commentEntityPayload.properties.publishedTime,
+                        date: this.dateParser(entity.payload.commentEntityPayload.properties.publishedTime),
+                        likes: +entity.payload.commentEntityPayload.toolbar.likeCountLiked,
+                        replyCount: +entity.payload.commentEntityPayload.toolbar.replyCount,
+                        repliesToken: item.commentThreadRenderer.replies?.commentRepliesRenderer?.contents?.[0]?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token
+                    }
+                    this.comments.push(add)
+                    if (add.repliesToken) this.scrapReplies(add)
                 }
-                console.log("SCRAPED comments")
-                this.comments.push(add)
-                if(add.repliesToken) this.scrapReplies(add)
-                
+                else if (item.commentThreadRenderer?.comment?.commentRenderer) {
+                    const c = item.commentThreadRenderer.comment.commentRenderer
+                    const add = {
+                        author: HTMLUtils.escape(c.authorText.simpleText),
+                        verified: c.authorCommentBadge?.authorCommentBadgeRenderer.iconTooltip,
+                        authorEndpoint: c.authorEndpoint.browseEndpoint.browseId,
+                        authorAvatar: c.authorThumbnail.thumbnails[0].url,
+                        isChannelOwner: c.authorIsChannelOwner || false,
+                        commentId: c.commentId,
+                        content: HTMLUtils.escape(c.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
+                        relativeDate: c.publishedTimeText.runs.map(r => r.text).join(''),
+                        date: this.dateParser(c.publishedTimeText.runs.map(r => r.text).join('')),
+                        likes: +c.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS
+                        replyCount: c.replyCount,
+                        repliesToken: item.commentThreadRenderer.replies?.commentRepliesRenderer?.contents[0]?.continuationItemRenderer.continuationEndpoint.continuationCommand.token
+                    }
+                    this.comments.push(add)
+                    if (add.repliesToken) this.scrapReplies(add)
+                }
             }
             if (items.length && items[items.length - 1].continuationItemRenderer) {
                 token = items[items.length - 1].continuationItemRenderer.continuationEndpoint.continuationCommand.token
             }
             this.updateLoadingBar()
             if (!token) break;
-            if(i === 1 && !settings.loadAll) { this.toggleSpinner(false); break; }
+            if (i === 1 && !settings.loadAll) { this.toggleSpinner(false); break; }
         }
         this.updateLoadingBar();
         this.commentsLoaded = true
@@ -114,11 +134,11 @@ class CommentLoader {
     }
 
     done() {
-        if(this.commentsLoaded && !this.repliesTasks.find(r => r.finished === false)) {
+        if (this.commentsLoaded && !this.repliesTasks.find(r => r.finished === false)) {
             console.log(this.comments)
             this.finished = true
         }
-            
+
     }
 
     async scrapReplies(comment) {
@@ -130,22 +150,38 @@ class CommentLoader {
             const items = res.onResponseReceivedEndpoints[1]?.reloadContinuationItemsCommand?.continuationItems ||
                 res.onResponseReceivedEndpoints[0]?.appendContinuationItemsAction?.continuationItems || []
             for (let item of items) {
-                if (!item.commentRenderer) continue;
-                this.comments.push({
-                    author: HTMLUtils.escape(item.commentRenderer.authorText.simpleText),
-                    verified: item.commentRenderer.authorCommentBadge?.authorCommentBadgeRenderer.iconTooltip,
-                    authorEndpoint: item.commentRenderer.authorEndpoint.browseEndpoint.browseId,
-                    authorAvatar: item.commentRenderer.authorThumbnail.thumbnails[0].url,
-                    isChannelOwner: item.commentRenderer.authorIsChannelOwner || false,
-                    commentId: item.commentRenderer.commentId,
-                    content: HTMLUtils.escape(item.commentRenderer.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
-                    date: this.dateParser(item.commentRenderer.publishedTimeText.runs.map(r => r.text).join('')),
-                    // content: item.commentRenderer.contentText.runs.map(r => r.text).join('').replace(/\n/g, '<br />'), // NEEDS .join FOR MULTILINE
-                    relativeDate: item.commentRenderer.publishedTimeText.runs[0].text,
-                    likes: +item.commentRenderer.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS (>999)
+                if (!item.commentViewModel) continue;
+                const entity = res.frameworkUpdates.entityBatchUpdate.mutations.find(e => e.entityKey === item.commentViewModel.commentKey);
+                const add = {
+                    author: entity.payload.commentEntityPayload.author.displayName,
+                    verified: entity.payload.commentEntityPayload.author.isVerified,
+                    authorEndpoint: entity.payload.commentEntityPayload.author.channelId, //TO FIND
+                    authorAvatar: entity.payload.commentEntityPayload.author.avatarThumbnailUrl,
+                    isChannelOwner: entity.payload.commentEntityPayload.author.isCreator,
+                    commentId: entity.payload.commentEntityPayload.key,
+                    content: entity.payload.commentEntityPayload.properties.content.content,
+                    relativeDate: entity.payload.commentEntityPayload.properties.publishedTime,
+                    date: this.dateParser(entity.payload.commentEntityPayload.properties.publishedTime),
+                    likes: +entity.payload.commentEntityPayload.toolbar.likeCountLiked,
                     replyTo: comment.commentId,
                     replyToComment: comment
-                })
+                }
+                this.comments.push(add)
+                // this.comments.push({
+                //     author: HTMLUtils.escape(item.commentRenderer.authorText.simpleText),
+                //     verified: item.commentRenderer.authorCommentBadge?.authorCommentBadgeRenderer.iconTooltip,
+                //     authorEndpoint: item.commentRenderer.authorEndpoint.browseEndpoint.browseId,
+                //     authorAvatar: item.commentRenderer.authorThumbnail.thumbnails[0].url,
+                //     isChannelOwner: item.commentRenderer.authorIsChannelOwner || false,
+                //     commentId: item.commentRenderer.commentId,
+                //     content: HTMLUtils.escape(item.commentRenderer.contentText.runs.map(r => r.text).join('')).replace(/\n/g, '<br />'),
+                //     date: this.dateParser(item.commentRenderer.publishedTimeText.runs.map(r => r.text).join('')),
+                //     // content: item.commentRenderer.contentText.runs.map(r => r.text).join('').replace(/\n/g, '<br />'), // NEEDS .join FOR MULTILINE
+                //     relativeDate: item.commentRenderer.publishedTimeText.runs[0].text,
+                //     likes: +item.commentRenderer.voteCount?.simpleText || 0, // MIGHT FAIL IF SAMPLE TEXT INCLUDES COMMAS (>999)
+                //     replyTo: comment.commentId,
+                //     replyToComment: comment
+                // })
             }
             token = undefined
             if (items.length && items[items.length - 1].continuationItemRenderer) {
@@ -161,10 +197,10 @@ class CommentLoader {
     updateLoadingBar() {
         const loadedComments = document.getElementById('loaded-comments')
         const totalComments = document.getElementById('total-comments')
-        if(loadedComments) loadedComments.innerHTML = this.comments.length
-        if(totalComments) totalComments.innerHTML = this.total
+        if (loadedComments) loadedComments.innerHTML = this.comments.length
+        if (totalComments) totalComments.innerHTML = this.total
         const loadingBar = document.getElementById('comments-loading-bar')
-        if(loadingBar && this.total !== undefined) loadingBar.style.width = '' + ((this.comments.length / this.total) * 100) +'%'
+        if (loadingBar && this.total !== undefined) loadingBar.style.width = '' + ((this.comments.length / this.total) * 100) + '%'
     }
 }
 

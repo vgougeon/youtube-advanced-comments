@@ -42,9 +42,11 @@ class CommentFilter {
             this.filters.dateSort = value
             this.applyFilters()
         })
-        document.getElementById('load-all-comments').addEventListener('click', () => {
+        const loadAll = document.getElementById('load-all-comments')
+        if(loadAll) loadAll.addEventListener('click', () => {
             state.loadAll = true
         })
+        else yacLogger.debug('load-all-comments not found')
     }
 
     applyFilters() {
