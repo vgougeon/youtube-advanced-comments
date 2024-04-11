@@ -79,7 +79,7 @@ class CommentLoader {
             }
             for (let item of items) {
                 if (!item.commentThreadRenderer) continue;
-                if(!res.frameworkUpdates) debugger;
+                // if(!res.frameworkUpdates) debugger;
                 if (res.frameworkUpdates) {
                     const entity = res.frameworkUpdates.entityBatchUpdate.mutations.find(e => e.entityKey === item.commentThreadRenderer.commentViewModel.commentViewModel.commentKey);
                     const add = {
